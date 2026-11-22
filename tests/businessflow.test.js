@@ -28,7 +28,7 @@ test("CSV export neutralizes spreadsheet formula prefixes", () => {
   assert.ok(html.includes("s=\"'\"+s"));
 });
 test("date comparisons use local calendar date, not UTC ISO date", () => {
-  const dateFn = html.slice(html.indexOf("const localDate="), html.indexOf("const validDate="));
+  const dateFn = html.slice(html.indexOf("const localDate="), html.indexOf("function validDate("));
   assert.ok(dateFn.includes("getFullYear") && dateFn.includes("getMonth") && dateFn.includes("getDate"));
   assert.equal(dateFn.includes("toISOString"), false);
 });
@@ -53,7 +53,7 @@ test("enquiry brief discloses pilot price, scope, and delivery conditions", () =
 });
 
 test("calendar validation rejects impossible dates and accepts leap days", () => {
-  const match = script.match(/function validDate\\(s\\)\\{[\\s\\S]*?\\n\\}/);
+  const match = script.match(/function validDate\\(s\\)\\{[^}]*\\}/);
   assert.ok(match, "validDate helper exists");
   const validDate = vm.runInNewContext("(" + match[0] + ")");
   assert.equal(validDate("2024-02-29"), true);
