@@ -20,7 +20,7 @@
 - `country-coverage.csv`: country-level evidence observed in this snapshot. A country is counted only when a dated source explicitly identifies it.
 - `opportunities.csv`: individual procurement opportunities linked to an organization and source; multiple notices from one organization remain separate from the organization count.
 - `product-opportunity-analysis.md`: buyer requirements translated into a product hypothesis, capability gaps and safe validation gates.
-- `tests/test_market_research.py`: schema, source-link, ID, date, opportunity-link and country-count consistency checks; run with `python -m unittest tests/test_market_research.py -v`.
+- `tests/test_market_research.py`: schema, source-link, ID, date, opportunity-link and country-count consistency checks; run with `python tests/test_market_research.py -v`.
 
 ## Snapshot limitations
 
