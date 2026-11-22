@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SRI BusinessFlow का स्थानीय परीक्षण उपकरण: enquiry, invoice और भुगतान reconciliation।">
+<meta name="theme-color" content="#102b46">
+<title>SRI BusinessFlow · परीक्षण</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif;color:#172638;background:#f3f6f8}*{box-sizing:border-box}body{margin:0;line-height:1.55}header{background:#102b46;color:#fff;padding:24px max(18px,calc((100% - 1080px)/2))}header p{margin:6px 0;color:#d6e3ed}main{max-width:1080px;margin:22px auto;padding:0 16px}.notice{padding:13px 15px;border:1px solid #e8d39a;background:#fff9e8;border-radius:12px;margin-bottom:16px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}.stat,.panel{background:#fff;border:1px solid #dce4ec;border-radius:14px;padding:16px}.stat span{display:block;color:#536477;font-size:.88rem}.stat strong{font-size:1.4rem}.layout{display:grid;grid-template-columns:minmax(250px,320px) 1fr;gap:16px;align-items:start}.panel h2{font-size:1.12rem;margin:0 0 12px}label{display:block;font-size:.9rem;font-weight:650;margin:11px 0 4px}input,select,button{font:inherit}input,select{width:100%;padding:10px;border:1px solid #b9c6d2;border-radius:8px;background:white;color:#172638}button,.button{border:0;border-radius:9px;padding:10px 13px;background:#087e78;color:white;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}button.secondary,.button.secondary{background:#edf2f6;color:#17334b;border:1px solid #cbd6df}button.danger{background:#fff0ef;color:#9b2822;border:1px solid #e8b7b3}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;margin-bottom:12px}.toolbar input{max-width:260px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:650px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #e6ebef;vertical-align:top}th{color:#536477;font-size:.82rem}.pill{display:inline-block;padding:3px 8px;border-radius:99px;font-size:.78rem;font-weight:700;background:#edf2f6}.pill.paid{background:#e6f5ec;color:#17633a}.pill.overdue{background:#fff0ef;color:#9b2822}.small{font-size:.82rem;color:#536477}.empty{padding:24px 8px;text-align:center;color:#536477}.error{color:#9b2822;background:#fff0ef;padding:10px;border-radius:8px;margin:10px 0}.success{color:#17633a;background:#e6f5ec;padding:10px;border-radius:8px;margin:10px 0}footer{max-width:1080px;margin:0 auto;padding:0 16px 30px;color:#536477;font-size:.85rem}a{color:#075f78}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #f0c66a;outline-offset:2px}@media(max-width:760px){.layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>SRI BusinessFlow</h1><p>ग्राहक enquiry · invoice register · payment reconciliation</p></header>
+<main>
+<div class="notice"><strong>स्थानीय परीक्षण उपकरण — production financial system नहीं।</strong><br>डेटा केवल इसी browser/device में रखा जाता है; cloud backup, encryption, multi-device sync, invoice sending या payment gateway नहीं है। बैंक विवरण, password, OTP, Aadhaar/PAN, निजी ग्राहक डेटा या संवेदनशील जानकारी दर्ज न करें। भुगतान status केवल बाहरी account में वास्तविक credit जाँचने के बाद owner द्वारा पुष्टि पर बदलेगा।</div>
+<div id="message" role="status" aria-live="polite"></div>
+<section class="stats" aria-label="व्यवसाय सारांश">
+<div class="stat"><span>खुले invoices</span><strong id="openCount">0</strong></div>
+<div class="stat"><span>बकाया राशि</span><strong id="outstanding">₹0</strong></div>
+<div class="stat"><span>Overdue invoices</span><strong id="overdueCount">0</strong></div>
+<div class="stat"><span>बाहरी जाँच के बाद दर्ज भुगतान</span><strong id="paidAmount">₹0</strong></div>
+</section>
+<div class="layout">
+<section class="panel">
+<h2>नया enquiry / invoice रिकॉर्ड</h2>
+<form id="entryForm">
+<label for="customer">ग्राहक / व्यवसाय नाम *</label><input id="customer" maxlength="80" required autocomplete="organization">
+<label for="contact">सार्वजनिक contact reference (वैकल्पिक)</label><input id="contact" maxlength="100" placeholder="केवल public business email या सामान्य संदर्भ">
+<label for="description">काम / invoice विवरण *</label><input id="description" maxlength="160" required>
+<label for="amount">राशि (INR) *</label><input id="amount" type="number" min="1" max="10000000" step="0.01" required>
+<label for="dueDate">देय तारीख *</label><input id="dueDate" type="date" required>
+<label for="stage">स्थिति</label><select id="stage"><option value="enquiry">Enquiry / प्रस्ताव</option><option value="open">Invoice जारी</option></select>
+<p class="small">यहाँ Paid विकल्प उपलब्ध नहीं है। भुगतान की स्थिति केवल रिकॉर्ड बनने के बाद अलग पुष्टि प्रक्रिया से बदलेगी।</p>
+<div class="actions"><button type="submit">रिकॉर्ड सुरक्षित करें</button><button type="reset" class="secondary">साफ़ करें</button></div>
+</form>
+</section>
+<section class="panel">
+<div class="toolbar"><h2>ग्राहक और invoice register</h2><input id="filter" type="search" placeholder="ग्राहक / विवरण खोजें" aria-label="रिकॉर्ड खोजें"><div class="actions" style="margin:0"><button id="exportCsv" class="secondary" type="button">CSV export</button><button id="backup" class="secondary" type="button">JSON backup</button></div></div>
+<div class="table-wrap"><table><thead><tr><th>ग्राहक / काम</th><th>राशि</th><th>देय तारीख</th><th>स्थिति</th><th>कार्रवाई</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div id="empty" class="empty" hidden>अभी कोई रिकॉर्ड नहीं है।</div>
+<div class="actions"><button id="demo" class="secondary" type="button">काल्पनिक demo जोड़ें</button><button id="clearAll" class="danger" type="button">सभी स्थानीय रिकॉर्ड हटाएँ</button></div>
+</section>
+</div>
+</main>
+<footer>Prototype v1 · कोई network request / analytics / automatic message नहीं। डेटा केवल उसी browser में उपलब्ध है। Export backup को सुरक्षित निजी स्थान पर रखें। इसे वास्तविक ग्राहक डेटा या accounting का एकमात्र रिकॉर्ड न बनाएँ।</footer>
+<script>
+(function(){
+"use strict";
+const KEY="sri-businessflow-local-v1";
+const $=id=>document.getElementById(id);
+let records=[];
+let storageReady=true;
+const money=n=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(n);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const localDate=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")};
+const validDate=s=>typeof s==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.isNaN(Date.parse(s+"T12:00:00"));
+function announce(message,type){$("message").className=type||"";$("message").textContent=message}
+function validRecord(r){return r&&typeof r==="object"&&typeof r.id==="string"&&r.id.length>0&&typeof r.customer==="string"&&typeof r.description==="string"&&typeof r.amount==="number"&&Number.isFinite(r.amount)&&r.amount>0&&validDate(r.dueDate)&&["enquiry","open","paid"].includes(r.stage)}
+function load(){
+ try{const raw=localStorage.getItem(KEY);if(!raw){records=[];return}const parsed=JSON.parse(raw);if(!Array.isArray(parsed))throw new Error("Invalid data format");records=parsed.filter(validRecord)}
+ catch(e){storageReady=false;records=[];announce("Browser storage पढ़ने में समस्या हुई। मौजूदा डेटा उपलब्ध नहीं माना जा सकता; कुछ भी overwrite न करें। पहले browser storage जाँचें।","error")}
+}
+function save(){
+ if(!storageReady){announce("Storage उपलब्ध नहीं है; रिकॉर्ड सुरक्षित नहीं किया गया।","error");return false}
+ try{localStorage.setItem(KEY,JSON.stringify(records));render();announce("रिकॉर्ड इसी browser में सुरक्षित हुआ।","success");return true}
+ catch(e){announce("Browser storage में लिखना विफल हुआ। रिकॉर्ड सुरक्षित होने का दावा नहीं किया जा सकता; तुरंत JSON backup उपलब्ध हो तो लें।","error");return false}
+}
+function isOverdue(r){return r.stage==="open"&&r.dueDate<localDate()}
+function status(r){return r.stage==="paid"?"भुगतान बाहरी जाँच के बाद दर्ज":r.stage==="open"?"Invoice जारी":"Enquiry / प्रस्ताव"}
+function render(){
+ const open=records.filter(r=>r.stage==="open"),paid=records.filter(r=>r.stage==="paid");
+ $("openCount").textContent=open.length;$("outstanding").textContent=money(open.reduce((a,r)=>a+r.amount,0));
+ $("overdueCount").textContent=open.filter(isOverdue).length;$("paidAmount").textContent=money(paid.reduce((a,r)=>a+r.amount,0));
+ const q=$("filter").value.trim().toLowerCase();
+ const shown=records.filter(r=>(r.customer+" "+r.description+" "+(r.contact||"")).toLowerCase().includes(q));
+ $("rows").innerHTML=shown.map(r=>'<tr><td><strong>'+esc(r.customer)+'</strong><br><span class="small">'+esc(r.description)+'</span>'+(r.contact?'<br><span class="small">'+esc(r.contact)+'</span>':"")+'</td><td>'+money(r.amount)+'</td><td>'+esc(r.dueDate)+'</td><td><span class="pill '+(r.stage==="paid"?"paid":isOverdue(r)?"overdue":"")+'">'+(isOverdue(r)?"Overdue":status(r))+'</span></td><td><div class="actions" style="margin:0">'+(r.stage==="open"?'<button type="button" data-paid="'+esc(r.id)+'" class="secondary">बाहरी भुगतान जाँचें</button>':"")+'<button type="button" data-delete="'+esc(r.id)+'" class="danger">हटाएँ</button></div></td></tr>').join("");
+ $("empty").hidden=shown.length!==0;
+}
+function makeId(){if(crypto&&typeof crypto.randomUUID==="function")return crypto.randomUUID();return "sri-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)+"-"+Math.random().toString(36).slice(2)}
+$("entryForm").addEventListener("submit",e=>{
+ e.preventDefault();if(!e.target.reportValidity())return;
+ const amount=Number($("amount").value),dueDate=$("dueDate").value;
+ if(!Number.isFinite(amount)||amount<=0||amount>10000000||!validDate(dueDate)){announce("राशि या तारीख मान्य नहीं है।","error");return}
+ const r={id:makeId(),customer:$("customer").value.trim(),contact:$("contact").value.trim(),description:$("description").value.trim(),amount,dueDate,stage:$("stage").value,createdAt:new Date().toISOString()};
+ if(!r.customer||!r.description){announce("आवश्यक विवरण भरें।","error");return}
+ records.unshift(r);if(save())e.target.reset();else records.shift();
+});
+$("filter").addEventListener("input",render);
+$("rows").addEventListener("click",e=>{
+ const paid=e.target.closest("[data-paid]"),del=e.target.closest("[data-delete]");
+ if(paid){
+  const r=records.find(x=>x.id===paid.dataset.paid);
+  if(r&&confirm("केवल तभी आगे बढ़ें जब आपने अपने वास्तविक बैंक/भुगतान खाते में इस invoice की पूरी राशि जमा होना स्वयं जाँच लिया हो। Screenshot, ग्राहक का दावा या pending UPI status पर्याप्त नहीं है। क्या आप बाहरी जाँच की पुष्टि करते हैं?")){
+   const old={stage:r.stage,paidMarkedAt:r.paidMarkedAt};r.stage="paid";r.paidMarkedAt=new Date().toISOString();r.paymentCheck="owner-confirmed-external-account-credit";
+   if(!save()){r.stage=old.stage;delete r.paidMarkedAt;delete r.paymentCheck}
+  }
+ }
+ if(del&&confirm("क्या इस स्थानीय रिकॉर्ड को स्थायी रूप से हटाना चाहते हैं?")){const old=records;records=records.filter(x=>x.id!==del.dataset.delete);if(!save())records=old}
+});
+function download(name,type,data){const blob=new Blob([data],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function csvCell(value){let s=String(value??"");if(/^[\s\u0000-\u001f]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+$("exportCsv").addEventListener("click",()=>{const cols=["customer","contact","description","amount","dueDate","stage","createdAt","paidMarkedAt"];download("sri-businessflow-records.csv","text/csv;charset=utf-8",[cols.join(","),...records.map(r=>cols.map(k=>csvCell(r[k])).join(","))].join("\r\n"))});
+$("backup").addEventListener("click",()=>download("sri-businessflow-backup.json","application/json",JSON.stringify({exportedAt:new Date().toISOString(),records},null,2)));
+$("demo").addEventListener("click",()=>{const d=localDate();const demo=[{id:makeId(),customer:"काल्पनिक प्रकाशन",contact:"demo@example.invalid",description:"Hindi editing sample",amount:499,dueDate:d,stage:"open",createdAt:new Date().toISOString()},{id:makeId(),customer:"काल्पनिक प्रशिक्षण केंद्र",contact:"केवल demo",description:"Research brief sample",amount:999,dueDate:d,stage:"enquiry",createdAt:new Date().toISOString()}];records.unshift(...demo);if(!save())records.splice(0,2)});
+$("clearAll").addEventListener("click",()=>{if(confirm("इस browser में रखे सभी SRI BusinessFlow रिकॉर्ड हटेंगे। पहले backup लें। क्या जारी रखें?")){const old=records;records=[];if(!save())records=old}});
+load();render();
+})();
+</script>
+</body>
+</html>
