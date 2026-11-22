@@ -1,21 +1,34 @@
 # Shirmani Research Institute
 
-This repository is the short-name public entry point for Shirmani Research Institute.
+A minimal, self-contained public sales entry for Shirmani Research Institute, published with GitHub Pages from the `main` branch.
 
-## Public entry
+## Primary objective
 
-- Main showroom: https://rampaulsaini.github.io/Shirmani-Research-Institute-Shirmani-Research-Institute-/supreme-clean-showroom.html
-- First paid pilot offer: https://rampaulsaini.github.io/Shirmani-Research-Institute-Shirmani-Research-Institute-/first-paid-pilot-offer.html
-- Full source repository: https://github.com/rampaulsaini/Shirmani-Research-Institute-Shirmani-Research-Institute-
+Convert a real prospective customer into a clearly scoped, paid Hindi/English writing and research pilot. The public page separates enquiry, written scope, payment verification, and delivery. It does not claim sales or customer outcomes without evidence.
 
-## Source-of-truth boundary
+## Public page
 
-The full project source, production assets, workflows and evidence records remain in the full source repository linked above. This repository is currently a lightweight public entry point; it is not a complete copy or migration of the full platform.
+- GitHub Pages: https://rampaulsaini.github.io/Shirmani-Research-Institute/
+- Service: Hindi / English Writing & Research
+- One-time introductory pilot: ₹499 (indicative standard price ₹999), available through 30 November 2026
+- Scope: one deliverable up to 500 words, one consolidated revision
+- Proposed delivery: 2 working days after written scope, required material, and payment confirmation
 
-No sales, payments, dispatches or independent verification are claimed by this landing repository. Such states must be supported by actual customer and evidence records.
+## How enquiries work
 
-## Recovery and migration policy
+The page uses direct WhatsApp and email links. It is a static GitHub Pages site: it does not store enquiries in a database, run a backend, or claim that a message was received until the owner sees it.
 
-- Preserve the full source repository and all existing backups.
-- Do not force-push, delete, reset, or overwrite the full source repository.
-- Any future migration must be staged, size-checked, tested, and independently verified before changing the canonical source.
+Payment instructions are shared only after the buyer and SRI agree on the exact scope, price, and deadline in writing. No payment identifier or checkout URL is published here because none is configured in this repository. A payment is verified only after actual account credit is checked; a screenshot alone is not proof of credit.
+
+## Operating boundaries
+
+- This repository is the only authorized source and target for this work.
+- Keep the site small, fast, accessible, mobile-friendly, and dependency-free.
+- Do not add analytics, trackers, external frameworks, or a backend unless a demonstrated first-payment blocker requires it and the owner approves the required service.
+- Never invent testimonials, customer intent, orders, payments, delivery evidence, credentials, or payment details.
+- No subscriptions, hidden renewals, pressure tactics, or unlimited free work.
+- Do not claim income until a genuine payment is verified.
+
+## Deployment
+
+GitHub Pages must be configured by the repository owner to publish the root of `main`. A successful Actions run is deployment evidence, not sales or payment evidence.
