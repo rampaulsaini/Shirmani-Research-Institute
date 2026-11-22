@@ -53,7 +53,7 @@ test("enquiry brief discloses pilot price, scope, and delivery conditions", () =
 });
 
 test("calendar validation rejects impossible dates and accepts leap days", () => {
-  const match = script.match(/function validDate\\(s\\)\\{[^}]*\\}/);
+  const match = script.match(/function validDate\(s\)\{[^}]*\}/);
   assert.ok(match, "validDate helper exists");
   const validDate = vm.runInNewContext("(" + match[0] + ")");
   assert.equal(validDate("2024-02-29"), true);
