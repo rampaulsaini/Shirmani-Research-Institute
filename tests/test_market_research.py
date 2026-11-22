@@ -83,6 +83,8 @@ class MarketResearchRegisterTests(unittest.TestCase):
 
     def test_country_totals_match_organization_register(self):
         _, organizations = read_csv("organizations.csv")
+        _, sources = read_csv("sources.csv")
+        source_ids = {row["source_id"] for row in sources}
         _, coverage = read_csv("country-coverage.csv")
         segment_columns = {
             "Government/public": "government_or_public",
@@ -92,6 +94,8 @@ class MarketResearchRegisterTests(unittest.TestCase):
             "Intergovernmental organization": "international_organization",
         }
         for country in coverage:
+            for source_id in country["evidence_source_ids"].split(";"):
+                self.assertIn(source_id, source_ids, country["country_or_territory"])
             records = [r for r in organizations if r["country_or_territory"] == country["country_or_territory"]]
             unique_orgs = {r["organization"] for r in records}
             self.assertEqual(int(country["organizations_identified"]), len(unique_orgs), country["country_or_territory"])
