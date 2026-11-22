@@ -1,4 +1,5 @@
 country_or_territory,region,government_or_public,private_company,ngo_nonprofit,university_research_lab,international_organization,organizations_identified,qualified_for_current_sri_offer,official_contacts_verified,first_contacts_sent,replies,buyer_enquiries,accepted_orders,verified_payments_inr,evidence_source_ids,last_checked,gap_or_note
-Bangladesh,South Asia,0,0,0,0,1,1,0,0,0,0,0,0,0,SRC-005,2026-11-22,"ILO procurement notice identifies beneficiary country; not a local government/private/NGO institution count"
+Bangladesh,South Asia,0,0,0,0,1,1,0,1,0,0,0,0,0,SRC-005,2026-11-22,"ILO e-Sourcing route is published in the procurement notice; this is a procurement channel, not a direct email or cold-outreach permission"
 Yemen,Middle East,0,1,0,0,0,1,0,1,0,0,0,0,0,SRC-005,2026-11-22,"DeepRoot Solutions tender; published procurement submission email is not a cold-outreach permission"
 Switzerland,Western Europe,0,0,0,0,1,1,0,1,0,0,0,0,0,SRC-005,2026-11-22,"WMO procurement benchmark; notice deadline expired 19 Nov 2026"
+India,South Asia,0,0,1,0,0,1,0,1,0,0,0,0,0,SRC-008;SRC-009,2026-11-22,"One NGO/nonprofit institution (LEHS) with multiple separately recorded procurement opportunities; procurement email verified in RFP, not permission for cold outreach; India-wide institution coverage is not assessed"
