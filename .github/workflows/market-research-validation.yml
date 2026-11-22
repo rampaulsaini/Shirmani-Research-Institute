@@ -1,0 +1,28 @@
+name: Market research register validation
+
+on:
+  pull_request:
+    paths:
+      - "market-research/**"
+      - "tests/test_market_research.py"
+      - ".github/workflows/market-research-validation.yml"
+  push:
+    branches: [main]
+    paths:
+      - "market-research/**"
+      - "tests/test_market_research.py"
+      - ".github/workflows/market-research-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate market research data
+        run: python -m unittest tests/test_market_research.py -v
