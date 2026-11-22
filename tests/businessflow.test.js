@@ -40,3 +40,14 @@ test("rendered customer fields are HTML escaped", () => {
   assert.ok(html.includes("const esc=s=>String"));
   assert.ok(html.includes("esc(r.customer)"));
 });
+
+test("enquiry brief discloses pilot price, scope, and delivery conditions", () => {
+  const brief = fs.readFileSync("brief.html", "utf8");
+  assert.ok(brief.includes("₹499"));
+  assert.ok(brief.includes("30 नवम्बर 2026 तक"));
+  assert.ok(brief.includes("अधिकतम 500 शब्द"));
+  assert.ok(brief.includes("एक consolidated revision"));
+  assert.ok(brief.includes("भुगतान की पुष्टि"));
+  assert.ok(brief.includes("No subscription"));
+  assert.ok(brief.includes("Pilot offer (30 Nov 2026 tak)"));
+});
