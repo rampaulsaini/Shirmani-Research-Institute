@@ -53,7 +53,6 @@ class MarketResearchRegisterTests(unittest.TestCase):
         source_ids = {row["source_id"] for row in sources}
         _, organizations = read_csv("organizations.csv")
         for row in organizations:
-            self.assertIn(row["source_date"], [row["source_date"]])
             valid_date(row["source_date"])
             valid_date(row["last_checked"])
             self.assertTrue(valid_https(row["official_source_url"]), row["record_id"])
