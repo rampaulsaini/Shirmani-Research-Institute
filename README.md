@@ -32,3 +32,10 @@ Payment instructions are shared only after the buyer and SRI agree on the exact 
 ## Deployment
 
 GitHub Pages must be configured by the repository owner to publish the root of `main`. A successful Actions run is deployment evidence, not sales or payment evidence.
+
+## Self-service enquiry brief
+
+- The public offer links to `brief.html`, a small browser-only enquiry brief builder.
+- It validates required fields and prepares a WhatsApp message or email draft; it does not submit automatically, store form data, or create an order.
+- Visitors should not enter confidential or sensitive information. The visitor reviews and chooses whether to open an external messaging service.
+- This feature is not a checkout, CRM, enquiry database, payment confirmation, or delivery automation.
