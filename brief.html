@@ -38,7 +38,7 @@
   <div class="field"><label for="length">अनुमानित आकार</label><select id="length"><option>500 शब्द तक</option><option>अभी तय नहीं</option><option>500 शब्द से अधिक (अलग प्रस्ताव चाहिए)</option></select></div>
   <div class="field"><label for="deadline">आपकी अपेक्षित तारीख (वैकल्पिक)</label><input id="deadline" type="date"></div>
   <div class="field"><label for="material">क्या सामग्री / स्रोत उपलब्ध हैं? (वैकल्पिक)</label><textarea id="material" maxlength="500" placeholder="केवल सामान्य विवरण दें; निजी दस्तावेज़ या credentials न भेजें।"></textarea></div>
-  <p class="notice">यह form आपके browser में ही विवरण तैयार करता है। कुछ भी अपने-आप submit या store नहीं होता। नीचे WhatsApp या Email चुनने पर ही आपका संदेश उस सेवा में खुलेगा। संदेश भेजने से पहले उसे जाँचें।</p>
+  <p class="notice"><strong>परिचयात्मक pilot (30 नवम्बर 2026 तक): ₹499 एक बार।</strong> इसमें Hindi या English में अधिकतम 500 शब्द, एक consolidated revision और लिखित scope, जरूरी सामग्री तथा भुगतान की पुष्टि के बाद प्रस्तावित 2 working days की delivery शामिल है। 500 शब्द से अधिक, अतिरिक्त deliverable या अतिरिक्त revision के लिए अलग लिखित प्रस्ताव और आपकी सहमति आवश्यक है। कोई subscription या auto-renewal नहीं। यह form आपके browser में ही विवरण तैयार करता है; कुछ अपने-आप submit या store नहीं होता। WhatsApp या Email चुनने पर ही संदेश उस सेवा में खुलेगा। भेजने से पहले उसे जाँचें।</p>
   <div class="actions"><button class="button" type="submit">संदेश तैयार करें</button><a class="button secondary" href="./index.html">मुख्य पेज</a></div>
 </form>
 <div id="result" hidden aria-live="polite">
@@ -62,6 +62,7 @@
     if(!form.reportValidity()) return;
     const lines=[
       "Namaste, mujhe SRI Writing & Research pilot ke liye written scope chahiye.",
+      "Pilot offer (30 Nov 2026 tak): ₹499 one-time; Hindi/English; up to 500 words; one consolidated revision; proposed delivery 2 working days after written scope, required materials and payment confirmation. Larger scope/additional revisions require a separate written quote. No subscription.",
       "",
       "काम: "+get("service"),
       "विषय / विवरण: "+get("topic"),
