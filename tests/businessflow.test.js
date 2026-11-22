@@ -66,3 +66,11 @@ test("stored paid records require owner-confirmation metadata and unique IDs", (
   assert.ok(html.includes("new Set(parsed.map(x=>x.id)).size!==parsed.length"));
   assert.ok(html.includes('"paymentCheck"'));
 });
+
+test("stored records enforce field lengths, amount ceiling, and creation timestamp", () => {
+  assert.ok(html.includes('r.customer.length<=80'));
+  assert.ok(html.includes('r.contact.length<=100'));
+  assert.ok(html.includes('r.description.length<=160'));
+  assert.ok(html.includes('r.amount<=10000000'));
+  assert.ok(html.includes('typeof r.createdAt==="string"&&!Number.isNaN(Date.parse(r.createdAt))'));
+});
