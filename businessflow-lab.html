@@ -58,7 +58,7 @@ const validDate=s=>typeof s==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.i
 function announce(message,type){$("message").className=type||"";$("message").textContent=message}
 function validRecord(r){return r&&typeof r==="object"&&typeof r.id==="string"&&r.id.length>0&&typeof r.customer==="string"&&typeof r.description==="string"&&typeof r.amount==="number"&&Number.isFinite(r.amount)&&r.amount>0&&validDate(r.dueDate)&&["enquiry","open","paid"].includes(r.stage)}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(!raw){records=[];return}const parsed=JSON.parse(raw);if(!Array.isArray(parsed))throw new Error("Invalid data format");records=parsed.filter(validRecord)}
+ try{const raw=localStorage.getItem(KEY);if(!raw){records=[];return}const parsed=JSON.parse(raw);if(!Array.isArray(parsed)||parsed.some(x=>!validRecord(x)))throw new Error("Invalid data format");records=parsed}
  catch(e){storageReady=false;records=[];announce("Browser storage पढ़ने में समस्या हुई। मौजूदा डेटा उपलब्ध नहीं माना जा सकता; कुछ भी overwrite न करें। पहले browser storage जाँचें।","error")}
 }
 function save(){
@@ -77,14 +77,14 @@ function render(){
  $("rows").innerHTML=shown.map(r=>'<tr><td><strong>'+esc(r.customer)+'</strong><br><span class="small">'+esc(r.description)+'</span>'+(r.contact?'<br><span class="small">'+esc(r.contact)+'</span>':"")+'</td><td>'+money(r.amount)+'</td><td>'+esc(r.dueDate)+'</td><td><span class="pill '+(r.stage==="paid"?"paid":isOverdue(r)?"overdue":"")+'">'+(isOverdue(r)?"Overdue":status(r))+'</span></td><td><div class="actions" style="margin:0">'+(r.stage==="open"?'<button type="button" data-paid="'+esc(r.id)+'" class="secondary">बाहरी भुगतान जाँचें</button>':"")+'<button type="button" data-delete="'+esc(r.id)+'" class="danger">हटाएँ</button></div></td></tr>').join("");
  $("empty").hidden=shown.length!==0;
 }
-function makeId(){if(crypto&&typeof crypto.randomUUID==="function")return crypto.randomUUID();return "sri-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)+"-"+Math.random().toString(36).slice(2)}
+function makeId(){if(window.crypto&&typeof window.crypto.randomUUID==="function")return window.crypto.randomUUID();return "sri-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)+"-"+Math.random().toString(36).slice(2)}
 $("entryForm").addEventListener("submit",e=>{
  e.preventDefault();if(!e.target.reportValidity())return;
  const amount=Number($("amount").value),dueDate=$("dueDate").value;
  if(!Number.isFinite(amount)||amount<=0||amount>10000000||!validDate(dueDate)){announce("राशि या तारीख मान्य नहीं है।","error");return}
  const r={id:makeId(),customer:$("customer").value.trim(),contact:$("contact").value.trim(),description:$("description").value.trim(),amount,dueDate,stage:$("stage").value,createdAt:new Date().toISOString()};
  if(!r.customer||!r.description){announce("आवश्यक विवरण भरें।","error");return}
- records.unshift(r);if(save())e.target.reset();else records.shift();
+ records.unshift(r);if(save())e.target.reset();else{records.shift();render()}
 });
 $("filter").addEventListener("input",render);
 $("rows").addEventListener("click",e=>{
@@ -93,17 +93,17 @@ $("rows").addEventListener("click",e=>{
   const r=records.find(x=>x.id===paid.dataset.paid);
   if(r&&confirm("केवल तभी आगे बढ़ें जब आपने अपने वास्तविक बैंक/भुगतान खाते में इस invoice की पूरी राशि जमा होना स्वयं जाँच लिया हो। Screenshot, ग्राहक का दावा या pending UPI status पर्याप्त नहीं है। क्या आप बाहरी जाँच की पुष्टि करते हैं?")){
    const old={stage:r.stage,paidMarkedAt:r.paidMarkedAt};r.stage="paid";r.paidMarkedAt=new Date().toISOString();r.paymentCheck="owner-confirmed-external-account-credit";
-   if(!save()){r.stage=old.stage;delete r.paidMarkedAt;delete r.paymentCheck}
+   if(!save()){r.stage=old.stage;delete r.paidMarkedAt;delete r.paymentCheck;render()}
   }
  }
- if(del&&confirm("क्या इस स्थानीय रिकॉर्ड को स्थायी रूप से हटाना चाहते हैं?")){const old=records;records=records.filter(x=>x.id!==del.dataset.delete);if(!save())records=old}
+ if(del&&confirm("क्या इस स्थानीय रिकॉर्ड को स्थायी रूप से हटाना चाहते हैं?")){const old=records;records=records.filter(x=>x.id!==del.dataset.delete);if(!save()){records=old;render()}}
 });
 function download(name,type,data){const blob=new Blob([data],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function csvCell(value){let s=String(value??"");if(/^[\s\u0000-\u001f]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
 $("exportCsv").addEventListener("click",()=>{const cols=["customer","contact","description","amount","dueDate","stage","createdAt","paidMarkedAt"];download("sri-businessflow-records.csv","text/csv;charset=utf-8",[cols.join(","),...records.map(r=>cols.map(k=>csvCell(r[k])).join(","))].join("\r\n"))});
-$("backup").addEventListener("click",()=>download("sri-businessflow-backup.json","application/json",JSON.stringify({exportedAt:new Date().toISOString(),records},null,2)));
-$("demo").addEventListener("click",()=>{const d=localDate();const demo=[{id:makeId(),customer:"काल्पनिक प्रकाशन",contact:"demo@example.invalid",description:"Hindi editing sample",amount:499,dueDate:d,stage:"open",createdAt:new Date().toISOString()},{id:makeId(),customer:"काल्पनिक प्रशिक्षण केंद्र",contact:"केवल demo",description:"Research brief sample",amount:999,dueDate:d,stage:"enquiry",createdAt:new Date().toISOString()}];records.unshift(...demo);if(!save())records.splice(0,2)});
-$("clearAll").addEventListener("click",()=>{if(confirm("इस browser में रखे सभी SRI BusinessFlow रिकॉर्ड हटेंगे। पहले backup लें। क्या जारी रखें?")){const old=records;records=[];if(!save())records=old}});
+$("backup").addEventListener("click",()=>{if(!storageReady){announce("डेटा पढ़ा नहीं जा सका; खाली backup बनाकर पुराने डेटा को overwrite न करें।","error");return}download("sri-businessflow-backup.json","application/json",JSON.stringify({exportedAt:new Date().toISOString(),records},null,2))});
+$("demo").addEventListener("click",()=>{const d=localDate();const demo=[{id:makeId(),customer:"काल्पनिक प्रकाशन",contact:"demo@example.invalid",description:"Hindi editing sample",amount:499,dueDate:d,stage:"open",createdAt:new Date().toISOString()},{id:makeId(),customer:"काल्पनिक प्रशिक्षण केंद्र",contact:"केवल demo",description:"Research brief sample",amount:999,dueDate:d,stage:"enquiry",createdAt:new Date().toISOString()}];records.unshift(...demo);if(!save()){records.splice(0,2);render()}});
+$("clearAll").addEventListener("click",()=>{if(confirm("इस browser में रखे सभी SRI BusinessFlow रिकॉर्ड हटेंगे। पहले backup लें। क्या जारी रखें?")){const old=records;records=[];if(!save()){records=old;render()}}});
 load();render();
 })();
 </script>
