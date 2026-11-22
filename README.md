@@ -33,6 +33,11 @@ Payment instructions are shared only after the buyer and SRI agree on the exact 
 
 GitHub Pages must be configured by the repository owner to publish the root of `main`. A successful Actions run is deployment evidence, not sales or payment evidence.
 
+## Institutional profile
+
+- Public capability statement, current offer, quality principles, contact policy and evidence limitations: `institutional-profile.html`.
+- It deliberately distinguishes current saleable offer from future product hypotheses and does not claim 195-country registration, partnerships, certifications or revenue.
+
 ## Self-service enquiry brief
 
 - The public offer links to `brief.html`, a small browser-only enquiry brief builder.
