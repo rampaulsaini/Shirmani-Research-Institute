@@ -51,3 +51,18 @@ test("enquiry brief discloses pilot price, scope, and delivery conditions", () =
   assert.ok(brief.includes("No subscription"));
   assert.ok(brief.includes("Pilot offer (30 Nov 2026 tak)"));
 });
+
+test("calendar validation rejects impossible dates and accepts leap days", () => {
+  const match = script.match(/function validDate\\(s\\)\\{[\\s\\S]*?\\n\\}/);
+  assert.ok(match, "validDate helper exists");
+  const validDate = vm.runInNewContext("(" + match[0] + ")");
+  assert.equal(validDate("2024-02-29"), true);
+  assert.equal(validDate("2025-02-29"), false);
+  assert.equal(validDate("2026-02-31"), false);
+  assert.equal(validDate("2026-13-01"), false);
+});
+test("stored paid records require owner-confirmation metadata and unique IDs", () => {
+  assert.ok(html.includes('r.paymentCheck==="owner-confirmed-external-account-credit"'));
+  assert.ok(html.includes("new Set(parsed.map(x=>x.id)).size!==parsed.length"));
+  assert.ok(html.includes('"paymentCheck"'));
+});
