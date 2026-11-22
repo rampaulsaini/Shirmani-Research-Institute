@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Shirmani Research Institute के Hindi/English writing और research pilot के लिए अपना काम स्पष्ट रूप से तैयार करें।">
+  <meta name="theme-color" content="#102238">
+  <title>अपना काम बताएँ — Shirmani Research Institute</title>
+  <style>
+    :root{color-scheme:light;--ink:#172638;--muted:#536477;--paper:#f4f7fa;--card:#fff;--line:#dce4ec;--navy:#102b46;--teal:#087e78;--gold:#f0c66a}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}
+    a{color:#075f78}a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+    .wrap{width:min(760px,calc(100% - 32px));margin:auto}header{background:var(--navy);color:white;padding:28px 0}header p{color:#e1ebf3;margin:6px 0}
+    main{padding:26px 0 48px}.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,4vw,30px)}
+    h1{font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.2;margin:0}h2{font-size:1.2rem;margin:0 0 14px}
+    .muted{color:var(--muted)}.field{margin:16px 0}.field label{display:block;font-weight:650;margin-bottom:6px}
+    input,select,textarea{width:100%;font:inherit;color:inherit;background:white;border:1px solid #aebdca;border-radius:9px;padding:11px}
+    textarea{min-height:112px;resize:vertical}.hint{font-size:.9rem;color:var(--muted);margin:5px 0}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 16px;border:0;border-radius:10px;background:var(--teal);color:white;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+    .button.secondary{background:white;color:var(--navy);border:1px solid #aebdca}.button[hidden]{display:none}
+    .notice{margin-top:18px;padding:12px 14px;border-left:4px solid var(--gold);background:#fff9e9;border-radius:8px}
+    #result{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}#result[hidden]{display:none}
+    footer{padding:20px 0;color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+<header><div class="wrap"><p>Shirmani Research Institute</p><h1>अपने काम का संक्षिप्त विवरण दें</h1><p>ताकि हम scope, कीमत और समयसीमा पर स्पष्ट लिखित जवाब दे सकें।</p></div></header>
+<main class="wrap">
+<section class="panel" aria-labelledby="form-title">
+<h2 id="form-title">काम की जानकारी</h2>
+<form id="brief-form">
+  <div class="field"><label for="service">आपको किस प्रकार की सहायता चाहिए? *</label>
+    <select id="service" required><option value="">चुनें</option><option>लेखन / नया draft</option><option>Editing / proofreading</option><option>Research brief / source summary</option><option>अन्य — पहले चर्चा करना है</option></select></div>
+  <div class="field"><label for="topic">विषय या काम का संक्षिप्त विवरण *</label>
+    <textarea id="topic" maxlength="1200" required placeholder="उदाहरण: कक्षा 8 के विज्ञान अध्याय का 400 शब्दों में सरल सार"></textarea><p class="hint">अधिकतम 1,200 अक्षर। यहाँ गोपनीय, निजी या संवेदनशील जानकारी न लिखें।</p></div>
+  <div class="field"><label for="language">भाषा *</label><select id="language" required><option value="">चुनें</option><option>Hindi</option><option>English</option><option>Hindi और English</option></select></div>
+  <div class="field"><label for="purpose">इस काम का उपयोग कहाँ होगा? *</label><input id="purpose" maxlength="240" required placeholder="जैसे: शिक्षा, वेबसाइट, व्यवसाय, व्यक्तिगत अध्ययन"></div>
+  <div class="field"><label for="length">अनुमानित आकार</label><select id="length"><option>500 शब्द तक</option><option>अभी तय नहीं</option><option>500 शब्द से अधिक (अलग प्रस्ताव चाहिए)</option></select></div>
+  <div class="field"><label for="deadline">आपकी अपेक्षित तारीख (वैकल्पिक)</label><input id="deadline" type="date"></div>
+  <div class="field"><label for="material">क्या सामग्री / स्रोत उपलब्ध हैं? (वैकल्पिक)</label><textarea id="material" maxlength="500" placeholder="केवल सामान्य विवरण दें; निजी दस्तावेज़ या credentials न भेजें।"></textarea></div>
+  <p class="notice">यह form आपके browser में ही विवरण तैयार करता है। कुछ भी अपने-आप submit या store नहीं होता। नीचे WhatsApp या Email चुनने पर ही आपका संदेश उस सेवा में खुलेगा। संदेश भेजने से पहले उसे जाँचें।</p>
+  <div class="actions"><button class="button" type="submit">संदेश तैयार करें</button><a class="button secondary" href="./index.html">मुख्य पेज</a></div>
+</form>
+<div id="result" hidden aria-live="polite">
+  <h2>आपका enquiry draft तैयार है</h2>
+  <p class="muted">भेजने से पहले खुले हुए संदेश में सभी विवरण जाँच लें। यह अभी enquiry भेजे जाने या order स्वीकार होने का प्रमाण नहीं है।</p>
+  <div class="actions"><a id="wa-link" class="button" target="_blank" rel="noopener noreferrer">WhatsApp में खोलें</a><a id="email-link" class="button secondary">Email draft खोलें</a></div>
+</div>
+</section>
+</main>
+<footer><div class="wrap"><a href="./index.html">Shirmani Research Institute — मुख्य पेज</a><p>कोई भुगतान, order या delivery तब तक confirmed नहीं है जब तक लिखित सहमति और वास्तविक प्रमाण उपलब्ध न हों।</p></div></footer>
+<script>
+(function(){
+  "use strict";
+  const form=document.getElementById("brief-form");
+  const result=document.getElementById("result");
+  const wa=document.getElementById("wa-link");
+  const email=document.getElementById("email-link");
+  const get=id=>document.getElementById(id).value.trim();
+  form.addEventListener("submit",function(event){
+    event.preventDefault();
+    if(!form.reportValidity()) return;
+    const lines=[
+      "Namaste, mujhe SRI Writing & Research pilot ke liye written scope chahiye.",
+      "",
+      "काम: "+get("service"),
+      "विषय / विवरण: "+get("topic"),
+      "भाषा: "+get("language"),
+      "उपयोग: "+get("purpose"),
+      "आकार: "+get("length"),
+      "अपेक्षित तारीख: "+(get("deadline")||"अभी तय नहीं"),
+      "उपलब्ध सामग्री: "+(get("material")||"अभी विवरण नहीं"),
+      "",
+      "कृपया उपलब्धता, अंतिम scope, कुल कीमत और समयसीमा लिखित रूप में बताएं।"
+    ];
+    const message=lines.join("\n");
+    wa.href="https://wa.me/918082935186?text="+encodeURIComponent(message);
+    email.href="mailto:sainirampaul60@gmail.com?subject="+encodeURIComponent("SRI Writing & Research — Enquiry")+"&body="+encodeURIComponent(message);
+    result.hidden=false;
+    result.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  });
+})();
+</script>
+</body>
+</html>
