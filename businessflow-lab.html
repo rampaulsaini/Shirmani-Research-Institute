@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Private SRI BusinessFlow prototype for tracking customer enquiries, invoices and receivables.">
+<title>SRI BusinessFlow · Private prototype</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#172638;background:#f3f6f8;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;line-height:1.5}header{background:#102b46;color:#fff;padding:24px max(18px,calc((100% - 1120px)/2))}
+header h1{margin:0;font-size:clamp(1.5rem,4vw,2.2rem)}header p{margin:6px 0 0;color:#d6e3ed}
+main{max-width:1120px;margin:22px auto;padding:0 16px}.notice{padding:12px 14px;border:1px solid #e8d39a;background:#fff9e8;border-radius:12px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}.stat,.panel{background:#fff;border:1px solid #dce4ec;border-radius:14px;padding:16px}.stat span{display:block;color:#536477;font-size:.88rem}.stat strong{font-size:1.5rem}
+.layout{display:grid;grid-template-columns:minmax(250px,320px) 1fr;gap:16px;align-items:start}.panel h2{font-size:1.15rem;margin:0 0 12px}
+label{display:block;font-size:.9rem;font-weight:650;margin:10px 0 4px}input,select,button{font:inherit}input,select{width:100%;padding:10px;border:1px solid #b9c6d2;border-radius:8px;background:white;color:#172638}
+button,.button{border:0;border-radius:9px;padding:10px 13px;background:#087e78;color:white;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+button.secondary,.button.secondary{background:#edf2f6;color:#17334b;border:1px solid #cbd6df}button.danger{background:#fff0ef;color:#9b2822;border:1px solid #e8b7b3}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;margin-bottom:12px}.toolbar input{max-width:280px}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #e6ebef;vertical-align:top}th{color:#536477;font-size:.82rem}
+.pill{display:inline-block;padding:3px 8px;border-radius:99px;font-size:.78rem;font-weight:700;background:#edf2f6}.pill.paid{background:#e6f5ec;color:#17633a}.pill.overdue{background:#fff0ef;color:#9b2822}
+.small{font-size:.82rem;color:#536477}.empty{padding:28px 8px;text-align:center;color:#536477}
+footer{max-width:1120px;margin:0 auto;padding:0 16px 30px;color:#536477;font-size:.85rem}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.table-wrap{overflow-x:auto}table{min-width:680px}}
+</style>
+</head>
+<body>
+<header><h1>SRI BusinessFlow</h1><p>Customer enquiries · invoices · follow-up · receivables</p></header>
+<main>
+<div class="notice"><strong>Private prototype — not a live financial system.</strong> Records stay in this browser on this device. Do not enter bank details, passwords, OTPs, tax IDs or sensitive customer data. Demo records are fictional. No invoice is sent and no payment is processed or verified here.</div>
+<section class="stats" aria-label="Business summary">
+<div class="stat"><span>Open invoices</span><strong id="openCount">0</strong></div>
+<div class="stat"><span>Outstanding amount</span><strong id="outstanding">₹0</strong></div>
+<div class="stat"><span>Overdue invoices</span><strong id="overdueCount">0</strong></div>
+<div class="stat"><span>Paid amount recorded</span><strong id="paidAmount">₹0</strong></div>
+</section>
+<div class="layout">
+<section class="panel">
+<h2>Add invoice / customer follow-up</h2>
+<form id="entryForm">
+<label for="customer">Customer / business name</label><input id="customer" maxlength="80" required autocomplete="organization" placeholder="e.g. Example Studio">
+<label for="contact">Contact reference (optional)</label><input id="contact" maxlength="80" placeholder="e.g. public business email or internal note">
+<label for="description">Work / invoice description</label><input id="description" maxlength="120" required placeholder="e.g. Monthly report preparation">
+<label for="amount">Amount (INR)</label><input id="amount" type="number" min="1" max="10000000" step="0.01" required>
+<label for="dueDate">Due date</label><input id="dueDate" type="date" required>
+<label for="stage">Status</label><select id="stage"><option value="enquiry">Enquiry / proposal</option><option value="open">Invoice issued</option><option value="paid">Paid (manually verified outside this app)</option></select>
+<div class="actions"><button type="submit">Save record</button><button type="reset" class="secondary">Clear</button></div>
+</form>
+<p class="small">Only mark “Paid” after checking the actual account credit outside this prototype.</p>
+</section>
+<section class="panel">
+<div class="toolbar"><h2>Customer and invoice register</h2><input id="filter" type="search" placeholder="Search customer or description" aria-label="Search records"><div class="actions" style="margin:0"><button id="exportCsv" class="secondary" type="button">Export CSV</button><button id="backup" class="secondary" type="button">Backup JSON</button></div></div>
+<div class="table-wrap"><table><thead><tr><th>Customer / work</th><th>Amount</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div id="empty" class="empty" hidden>No records yet. Add a record or load the fictional demo dataset.</div>
+<div class="actions"><button id="demo" class="secondary" type="button">Load fictional demo</button><button id="clearAll" class="danger" type="button">Delete all local records</button></div>
+</section>
+</div>
+</main>
+<footer>Prototype build 0.1 · No network requests · No analytics · No payment gateway · No automated messages. Export a backup before clearing browser data. Validate all workflows with synthetic records before any customer use.</footer>
+<script>
+(function(){
+"use strict";
+const KEY="sri-businessflow-prototype-v1";
+const $=id=>document.getElementById(id);
+let records=[];
+const money=n=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(n);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||"[]");records=Array.isArray(v)?v.filter(x=>x&&typeof x.id==="string"&&typeof x.amount==="number"):[]}catch(e){records=[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(records));render()}
+function status(r){return r.stage==="paid"?"Paid":r.stage==="open"?"Invoice issued":"Enquiry / proposal"}
+function isOverdue(r){return r.stage==="open"&&r.dueDate<today()}
+function render(){
+ const open=records.filter(r=>r.stage==="open"),paid=records.filter(r=>r.stage==="paid");
+ $("openCount").textContent=open.length;
+ $("outstanding").textContent=money(open.reduce((a,r)=>a+r.amount,0));
+ $("overdueCount").textContent=open.filter(isOverdue).length;
+ $("paidAmount").textContent=money(paid.reduce((a,r)=>a+r.amount,0));
+ const q=$("filter").value.trim().toLowerCase();
+ const shown=records.filter(r=>(r.customer+" "+r.description+" "+(r.contact||"")).toLowerCase().includes(q));
+ $("rows").innerHTML=shown.map(r=>'<tr><td><strong>'+esc(r.customer)+'</strong><br><span class="small">'+esc(r.description)+'</span>'+(r.contact?'<br><span class="small">'+esc(r.contact)+'</span>':"")+'</td><td>'+money(r.amount)+'</td><td>'+esc(r.dueDate)+'</td><td><span class="pill '+(r.stage==="paid"?"paid":isOverdue(r)?"overdue":"")+'">'+(isOverdue(r)?"Overdue":status(r))+'</span></td><td><div class="actions" style="margin:0">'+(r.stage!=="paid"?'<button type="button" data-paid="'+esc(r.id)+'" class="secondary">Mark paid</button>':"")+'<button type="button" data-delete="'+esc(r.id)+'" class="danger">Delete</button></div></td></tr>').join("");
+ $("empty").hidden=shown.length!==0;
+}
+$("entryForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const amount=Number($("amount").value);
+ if(!Number.isFinite(amount)||amount<=0){alert("Enter a valid positive amount.");return}
+ const r={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2),customer:$("customer").value.trim(),contact:$("contact").value.trim(),description:$("description").value.trim(),amount,dueDate:$("dueDate").value,stage:$("stage").value,createdAt:new Date().toISOString()};
+ if(!r.customer||!r.description||!r.dueDate){alert("Complete the required fields.");return}
+ records.unshift(r);save();e.target.reset();
+});
+$("filter").addEventListener("input",render);
+$("rows").addEventListener("click",e=>{
+ const paid=e.target.closest("[data-paid]"),del=e.target.closest("[data-delete]");
+ if(paid){const r=records.find(x=>x.id===paid.dataset.paid);if(r&&confirm("Only continue if actual account credit has been checked outside this app. Mark this record as paid?")){r.stage="paid";r.paidMarkedAt=new Date().toISOString();save()}}
+ if(del){if(confirm("Delete this local record?")){records=records.filter(x=>x.id!==del.dataset.delete);save()}}
+});
+function download(name,type,data){const a=document.createElement("a"),url=URL.createObjectURL(new Blob([data],{type}));a.href=url;a.download=name;a.click();URL.revokeObjectURL(url)}
+$("exportCsv").addEventListener("click",()=>{const cols=["customer","contact","description","amount","dueDate","stage","createdAt"];const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';download("sri-businessflow-records.csv","text/csv;charset=utf-8",[cols.join(","),...records.map(r=>cols.map(k=>q(r[k])).join(","))].join("\n"))});
+$("backup").addEventListener("click",()=>download("sri-businessflow-backup.json","application/json",JSON.stringify({exportedAt:new Date().toISOString(),records},null,2)));
+$("demo").addEventListener("click",()=>{if(records.length&&!confirm("Add fictional examples to the existing records?"))return;const d=today();records.push({id:"demo-1",customer:"Fictional Design Studio",contact:"demo@example.invalid",description:"Monthly report sample",amount:499,dueDate:d,stage:"open",createdAt:new Date().toISOString()},{id:"demo-2",customer:"Fictional Learning Co.",contact:"Demo record only",description:"Hindi editing sample",amount:999,dueDate:d,stage:"paid",createdAt:new Date().toISOString()});save()});
+$("clearAll").addEventListener("click",()=>{if(confirm("Permanently delete all records stored by this prototype in this browser? Export a backup first if needed.")){records=[];save()}});
+load();render();
+})();
+</script>
+</body>
+</html>
