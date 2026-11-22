@@ -7,7 +7,7 @@ on:
       - "tests/test_market_research.py"
       - ".github/workflows/market-research-validation.yml"
   push:
-    branches: [main]
+    branches: [main, 'research/**']
     paths:
       - "market-research/**"
       - "tests/test_market_research.py"
