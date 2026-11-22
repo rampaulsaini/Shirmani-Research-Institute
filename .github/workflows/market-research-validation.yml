@@ -25,4 +25,4 @@ jobs:
         with:
           python-version: "3.12"
       - name: Validate market research data
-        run: python -m unittest tests/test_market_research.py -v
+        run: python tests/test_market_research.py -v
