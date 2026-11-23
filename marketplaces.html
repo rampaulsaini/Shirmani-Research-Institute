@@ -109,6 +109,19 @@
     </section>
 
     <section class="panel">
+      <h2>Automation feasibility — API और platform नियम</h2>
+      <ul>
+        <li><strong>Contra:</strong> आधिकारिक Contra MCP उपलब्ध है और portfolio, messages, proposals, invoices तथा payment links जैसे कामों को support करता है। हर account-changing action के लिए prepare-and-confirm approval आवश्यक है; इसलिए इसे बिना अनुमति पूर्णतः स्वचालित नहीं माना जा सकता। <a href="https://contra.com/features/mcp" target="_blank" rel="noopener noreferrer">Contra MCP details</a></li>
+        <li><strong>Upwork:</strong> official API में freelancer proposals और messaging के endpoints हैं, लेकिन API key review और eligibility शर्तें कड़ी हैं; प्रकाशित criteria में $25,000 lifetime earnings/spend और freelancer के लिए 90% Job Success Score शामिल हैं। Commercial API use के लिए अलग written permission भी सीमित है। अभी SRI की API eligibility सिद्ध नहीं है। <a href="https://www.upwork.com/developer/documentation/graphql/api/docs/index.html" target="_blank" rel="noopener noreferrer">API requirements</a></li>
+        <li><strong>Etsy:</strong> official Open API seller shop listings, orders और shop management को OAuth scopes के साथ support करता है। Seller App केवल अपने active shop के लिए है; अभी साझा URL personal profile है, active shop नहीं। <a href="https://developers.etsy.com/documentation/" target="_blank" rel="noopener noreferrer">Etsy Open API</a></li>
+        <li><strong>Fiverr:</strong> official Fiverr MCP अभी marketplace search, comparison और project scoping के लिए है; यह आपके seller orders/messages को unattended manage करने की अनुमति का प्रमाण नहीं। Fiverr की policy order/chat/file data को bots, crawlers या scrapers से निकालने पर account restriction का जोखिम बताती है। <a href="https://help.fiverr.com/hc/en-us/articles/52715474121361-Using-Fiverr-MCP-in-your-AI-agent" target="_blank" rel="noopener noreferrer">Fiverr MCP</a> · <a href="https://help.fiverr.com/hc/en-us/articles/360010639617-A-freelancer-s-guide-to-the-Fiverr-order-process" target="_blank" rel="noopener noreferrer">Fiverr order-tool restrictions</a></li>
+        <li><strong>LinkedIn:</strong> API access के लिए app registration, applicable product approval and member consent आवश्यक हैं; profile/network scraping या credential-based automation नहीं की जाएगी। <a href="https://developer.linkedin.com/legal" target="_blank" rel="noopener noreferrer">LinkedIn API terms</a></li>
+        <li><strong>Truelancer / Freelancer.com:</strong> इस review में कोई verified official seller API access route स्थापित नहीं हुआ। फिलहाल इन्हें manual marketplace channels ही माना जाएगा; scraping या browser-bot automation नहीं।</li>
+      </ul>
+      <p class="notice">निष्कर्ष: अभी सबसे व्यावहारिक सुरक्षित आधार static SRI directory + platform-compliant enquiry handling है। कोई platform integration तभी बनेगा जब official API access, account eligibility, consent, terms, security और cost सभी जाँचे जाएँ। GitHub Pages अकेले 24×7 background automission नहीं चला सकता।</p>
+    </section>
+
+    <section class="panel">
       <h2>SRI का साझा ग्राहक-प्रवाह</h2>
       <p><strong>Profile / listing → enquiry → written scope, price and deadline → platform-compliant payment → actual payment verification → delivery → customer acceptance.</strong></p>
       <p>मौजूदा SRI-SVC-001 pilot: एक Hindi या English deliverable, अधिकतम 500 शब्द, एक consolidated revision; introductory one-time price ₹499 (indicative standard ₹999), 30 नवम्बर 2026 तक। अंतिम समयसीमा और scope लिखित सहमति के बाद तय होंगे।</p>
