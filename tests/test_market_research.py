@@ -200,5 +200,23 @@ class MarketResearchRegisterTests(unittest.TestCase):
             self.assertEqual(row["external_contact_allowed"], "NO")
 
 
+    def test_readme_checkpoint_counts_match_register(self):
+        readme = (DATA / "README.md").read_text(encoding="utf-8")
+        _, sources = read_csv("sources.csv")
+        _, organizations = read_csv("organizations.csv")
+        _, opportunities = read_csv("opportunities.csv")
+        _, coverage = read_csv("country-coverage.csv")
+        _, reminders = read_csv("reminders.csv")
+        expected = [
+            f"**{len(coverage)} country rows**",
+            f"**{len(organizations)} organization records**",
+            f"**{len(opportunities)} procurement opportunities**",
+            f"**{len(sources)} dated sources**",
+            f"**{len(reminders)} internal reminders**",
+        ]
+        for phrase in expected:
+            self.assertIn(phrase, readme, phrase)
+
+
 if __name__ == "__main__":
     unittest.main()
