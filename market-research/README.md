@@ -20,17 +20,19 @@
 - `country-coverage.csv`: country-level evidence observed in this snapshot. A country is counted only when a dated source explicitly identifies it.
 - `opportunities.csv`: individual procurement opportunities linked to an organization and source; multiple notices from one organization remain separate from the organization count.
 - `product-opportunity-analysis.md`: buyer requirements translated into a product hypothesis, capability gaps and safe validation gates.
+- `tests/test_market_research.py`: schema, source-link, ID, date, opportunity-link and country-count consistency checks; run with `python tests/test_market_research.py -v`.
+- `reminders.csv`: internal, date-based research reminders. Current reminders do not authorize external contact or follow-up.
 
 ## Current coverage checkpoint (24 November 2026)
 
-- **5 countries** with dated country-level records: Bangladesh, Yemen, Switzerland, India and South Africa. This is a small, non-exhaustive sample of the 195-country ambition.
-- **5 organization records** and **5 procurement opportunities** are recorded. The two new opportunity records cover the ILO Bangladesh editing call and City of Tshwane's language-services tender.
+- **14 countries** have dated country-level evidence rows: Bangladesh, Yemen, Switzerland, India, South Africa, Bahrain, Kuwait, Lebanon, Nepal, Oman, Qatar, Saudi Arabia, Sri Lanka and United Arab Emirates. Nine of these additional rows are supported only by one expired ILO multi-destination notice; they have no local organization or contact record. This is a small, non-exhaustive sample of the 195-country ambition.
+- **5 organization records** and **6 procurement opportunities** are recorded. The opportunity register separates the City of Tshwane tender, the ILO Bangladesh 89-page editing call and the expired 330,000-word multi-destination ILO call.
 - **0 organizations qualified** for the current SRI-SVC-001 offer; the new procurement signals are outside the documented 500-word Hindi/English pilot or have a missed eligibility gate.
-- **0 first-contact messages sent, 0 deliveries confirmed, 0 replies, 0 buyer enquiries, 0 written scopes, 0 accepted orders, ₹0 verified payments, 0 deliveries, 0 customer acceptances and 0 repeat purchases** in this market register.
+- **0 first contacts, 0 follow-up messages, 0 delivered messages, 0 replies, 0 opt-outs/refusals, 0 buyer enquiries, 0 written scopes, 0 quotes, 0 accepted orders, 0 payment requests, 0 payment claims, 0 verified payment transactions, ₹0 verified payments, 0 work-in-progress items, 0 QA-passed jobs, 0 deliveries, 0 customer acceptances and 0 repeat purchases** in this market register.
 - Published procurement contacts are counted as verified channels only; they are not counted as contact attempts and do not imply permission for cold sales outreach.
-- Country-level segment and funnel counts are maintained in `country-coverage.csv`. Delivery status is recorded as delivered, unknown or bounced; those categories reconcile to first contacts sent.
-- All country and opportunity checks in this update were made on 24 November 2026. See the source URLs and dates in `sources.csv` and `opportunities.csv`.
-- `tests/test_market_research.py`: schema, source-link, ID, date, opportunity-link and country-count consistency checks; run with `python tests/test_market_research.py -v`.
+- Country-level segment and funnel counts are maintained in `country-coverage.csv`. First-contact and follow-up delivery status is recorded as delivered, unknown or bounced; each set reconciles to messages sent. Claimed and verified payments, work, QA, delivery and acceptance are separate counters.
+- Internal reminder dates are maintained in `reminders.csv`. They are research-status checks only; no external follow-up is currently permitted.
+- New country and opportunity sources in this update were checked on 24 November 2026; older source records retain their original access dates. See the source URLs and dates in `sources.csv` and `opportunities.csv`.
 
 ## Snapshot limitations
 
@@ -49,7 +51,8 @@ No emails or enquiries were sent during this research pass. No procurement bid, 
 
 ## Funnel metric definitions
 
-- `official_contacts_verified` counts organizations with a published official procurement/business route, not messages sent.
-- `first_contacts_sent` counts actual first-contact messages only. For every sent message, exactly one of `messages_delivered`, `delivery_status_unknown` or `bounces` is recorded; replies and opt-outs are separate event counts.
+- `official_contacts_verified` counts organizations with a source-verified official procurement/business route, not messages sent; a route may be tender-specific or expired and does not imply cold-contact permission.
+- `first_contacts_sent` and `follow_up_messages_sent` count actual messages only. For each category, exactly one of delivered, delivery-status-unknown or bounced is recorded; replies and opt-outs/refusals are separate event counts.
 - `qualified_for_current_sri_offer` counts organizations whose stated need and eligibility fit an existing, evidenced SRI offer. A procurement notice outside the pilot scope is not qualified.
-- `verified_payments_inr` and `gross_revenue_inr` count only owner-reconciled actual credits. Net revenue is gross receipts minus recorded fees and refunds. No payment is counted from a screenshot, invoice, test order or message alone.
+- `payment_claims`/`payment_claimed_inr` are unverified claims. `verified_payment_transactions`/`verified_payments_inr` and `gross_revenue_inr` count only owner-reconciled actual credits. Net revenue is gross receipts minus recorded fees and refunds. No payment is counted from a screenshot, invoice, test order or message alone.
+- Country-segment counts count organization records assigned to that country, not every destination named by a multi-country tender.

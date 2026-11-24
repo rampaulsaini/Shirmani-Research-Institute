@@ -34,6 +34,7 @@ class MarketResearchRegisterTests(unittest.TestCase):
             ("sources.csv", "source_id"),
             ("organizations.csv", "record_id"),
             ("opportunities.csv", "opportunity_id"),
+            ("reminders.csv", "reminder_id"),
         ]:
             _, rows = read_csv(filename)
             values = [row[key] for row in rows]
@@ -76,7 +77,11 @@ class MarketResearchRegisterTests(unittest.TestCase):
         for row in opportunities:
             self.assertIn(row["organization_record_id"], organization_ids)
             self.assertIn(row["source_id"], source_ids)
-            self.assertIn(row["country_or_territory"], countries)
+            self.assertIn("countries_covered", row)
+            covered = [country.strip() for country in row["countries_covered"].split(";") if country.strip()]
+            self.assertTrue(covered, row["opportunity_id"])
+            for country in covered:
+                self.assertIn(country, countries, f"{row['opportunity_id']} {country}")
             self.assertTrue(valid_https(row["notice_url"]), row["opportunity_id"])
             valid_date(row["published_date"])
             valid_date(row["deadline"])
@@ -125,7 +130,11 @@ class MarketResearchRegisterTests(unittest.TestCase):
         _, coverage = read_csv("country-coverage.csv")
         required = [
             "messages_delivered", "delivery_status_unknown", "bounces",
-            "opt_outs_or_refusals", "written_scopes_sent", "deliveries",
+            "opt_outs_or_refusals", "follow_up_messages_sent", "follow_up_messages_delivered",
+            "follow_up_delivery_status_unknown", "follow_up_bounces", "follow_up_replies",
+            "quotes_issued", "payment_requests_issued", "payment_claims", "payment_claimed_inr",
+            "verified_payment_transactions", "work_in_progress", "qa_passed", "support_open", "support_closed",
+            "written_scopes_sent", "deliveries",
             "customer_acceptances", "repeat_purchases", "gross_revenue_inr",
             "fees_inr", "refunds_inr", "net_revenue_inr",
         ]
@@ -133,7 +142,10 @@ class MarketResearchRegisterTests(unittest.TestCase):
             "organizations_identified", "qualified_for_current_sri_offer",
             "official_contacts_verified", "first_contacts_sent", "messages_delivered",
             "delivery_status_unknown", "bounces", "replies", "opt_outs_or_refusals",
-            "buyer_enquiries", "written_scopes_sent", "accepted_orders",
+            "follow_up_messages_sent", "follow_up_messages_delivered", "follow_up_delivery_status_unknown",
+            "follow_up_bounces", "follow_up_replies", "buyer_enquiries", "written_scopes_sent",
+            "quotes_issued", "accepted_orders", "payment_requests_issued", "payment_claims",
+            "payment_claimed_inr", "verified_payment_transactions", "work_in_progress", "qa_passed", "support_open", "support_closed",
             "verified_payments_inr", "deliveries", "customer_acceptances",
             "repeat_purchases", "gross_revenue_inr", "fees_inr", "refunds_inr",
             "net_revenue_inr",
@@ -146,6 +158,11 @@ class MarketResearchRegisterTests(unittest.TestCase):
             self.assertEqual(
                 int(row["messages_delivered"]) + int(row["delivery_status_unknown"]) + int(row["bounces"]),
                 int(row["first_contacts_sent"]),
+                row["country_or_territory"],
+            )
+            self.assertEqual(
+                int(row["follow_up_messages_delivered"]) + int(row["follow_up_delivery_status_unknown"]) + int(row["follow_up_bounces"]),
+                int(row["follow_up_messages_sent"]),
                 row["country_or_territory"],
             )
             self.assertEqual(
@@ -166,6 +183,21 @@ class MarketResearchRegisterTests(unittest.TestCase):
             for row in organizations
         ]
         self.assertEqual(len(pairs), len(set(pairs)))
+
+
+    def test_reminders_reference_known_opportunities_and_do_not_authorize_unsolicited_contact(self):
+        _, opportunities = read_csv("opportunities.csv")
+        opportunity_ids = {row["opportunity_id"] for row in opportunities}
+        _, reminders = read_csv("reminders.csv")
+        for row in reminders:
+            self.assertEqual(row["related_record_type"], "opportunity")
+            self.assertIn(row["related_record_id"], opportunity_ids)
+            valid_date(row["due_date"])
+            valid_date(row["last_checked"])
+            self.assertTrue(row["action"].strip())
+            self.assertTrue(row["permission_basis"].strip())
+            self.assertIn(row["external_contact_allowed"], {"YES", "NO"})
+            self.assertEqual(row["external_contact_allowed"], "NO")
 
 
 if __name__ == "__main__":
