@@ -1,6 +1,6 @@
 # SRI Global Market Research Register
 
-**Snapshot:** 22 November 2026  
+**Snapshot:** 24 November 2026  
 **Purpose:** Build a lawful, source-linked understanding of institutional needs across countries and institution segments, while prioritizing the first genuine paid SRI order.
 
 ## Evidence rules
@@ -20,18 +20,36 @@
 - `country-coverage.csv`: country-level evidence observed in this snapshot. A country is counted only when a dated source explicitly identifies it.
 - `opportunities.csv`: individual procurement opportunities linked to an organization and source; multiple notices from one organization remain separate from the organization count.
 - `product-opportunity-analysis.md`: buyer requirements translated into a product hypothesis, capability gaps and safe validation gates.
+
+## Current coverage checkpoint (24 November 2026)
+
+- **5 countries** with dated country-level records: Bangladesh, Yemen, Switzerland, India and South Africa. This is a small, non-exhaustive sample of the 195-country ambition.
+- **5 organization records** and **5 procurement opportunities** are recorded. The two new opportunity records cover the ILO Bangladesh editing call and City of Tshwane's language-services tender.
+- **0 organizations qualified** for the current SRI-SVC-001 offer; the new procurement signals are outside the documented 500-word Hindi/English pilot or have a missed eligibility gate.
+- **0 first-contact messages sent, 0 deliveries confirmed, 0 replies, 0 buyer enquiries, 0 written scopes, 0 accepted orders, ₹0 verified payments, 0 deliveries, 0 customer acceptances and 0 repeat purchases** in this market register.
+- Published procurement contacts are counted as verified channels only; they are not counted as contact attempts and do not imply permission for cold sales outreach.
+- Country-level segment and funnel counts are maintained in `country-coverage.csv`. Delivery status is recorded as delivered, unknown or bounced; those categories reconcile to first contacts sent.
+- All country and opportunity checks in this update were made on 24 November 2026. See the source URLs and dates in `sources.csv` and `opportunities.csv`.
 - `tests/test_market_research.py`: schema, source-link, ID, date, opportunity-link and country-count consistency checks; run with `python tests/test_market_research.py -v`.
 
 ## Snapshot limitations
 
-This is an initial research dataset, not a completed 195-country census. The global directories claim broad coverage (for example, 196 countries/territories or more than 190 countries), but their full underlying institution records have not been individually extracted, checked, deduplicated, or classified here. No persistent historical country register was present in the repository at the time this snapshot was created; this PR establishes the first reviewable seed dataset. Do not infer total institutions or contacts from directory coverage claims.
+This is a staged research dataset, not a completed 195-country census. The global directories claim broad coverage (for example, 196 countries/territories or more than 190 countries), but their full underlying institution records have not been individually extracted, checked, deduplicated, or classified here. The current reviewable register contains five country rows and five organization records only. Do not infer total institutions or contacts from directory coverage claims.
 
 No emails or enquiries were sent during this research pass. No procurement bid, supplier registration, KYC, payment, or paid subscription was initiated.
 
 ## Next steps
 
-1. Continue from these CSVs and deduplicate by official domain + normalized organization name.
+1. Continue from these CSVs and deduplicate by official domain + normalized organization name; preserve the existing ORG/SRC/OPP identifiers.
 2. Expand one region and one institution segment at a time, recording explicit country evidence and gaps.
 3. Prefer current, open, clearly scoped procurement opportunities that match an existing SRI deliverable and capability.
 4. Improve the product offer only when repeated evidence shows a specific buyer need.
 5. Keep direct outreach for high-fit organizations with a lawful, published business channel and no tender communication restriction.
+
+
+## Funnel metric definitions
+
+- `official_contacts_verified` counts organizations with a published official procurement/business route, not messages sent.
+- `first_contacts_sent` counts actual first-contact messages only. For every sent message, exactly one of `messages_delivered`, `delivery_status_unknown` or `bounces` is recorded; replies and opt-outs are separate event counts.
+- `qualified_for_current_sri_offer` counts organizations whose stated need and eligibility fit an existing, evidenced SRI offer. A procurement notice outside the pilot scope is not qualified.
+- `verified_payments_inr` and `gross_revenue_inr` count only owner-reconciled actual credits. Net revenue is gross receipts minus recorded fees and refunds. No payment is counted from a screenshot, invoice, test order or message alone.
