@@ -1,0 +1,28 @@
+name: SRI static sales-page checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, "fix/**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sri-static-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run dependency-free public-page checks
+        run: python -m unittest discover -s tests -v
