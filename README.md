@@ -33,7 +33,7 @@ Payment instructions are shared only after the buyer and SRI agree on the exact 
 
 A dependency-free Python smoke test checks the public offer, enquiry brief, scope, price consistency, and safe external links. GitHub Actions runs this check on pull requests and pushes to `main`.
 
-GitHub Pages must be configured by the repository owner to publish the root of `main`. A successful Actions run is deployment evidence, not sales or payment evidence.
+GitHub Pages must be configured by the repository owner to publish the root of `main`. Run the same checks locally with `python -m unittest discover -s tests -v`. A successful Actions run is deployment evidence, not sales or payment evidence.
 
 ## Self-service enquiry brief
 
