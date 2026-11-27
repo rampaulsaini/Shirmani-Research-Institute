@@ -10,7 +10,7 @@ Convert a real prospective customer into a clearly scoped, paid Hindi/English wr
 
 - GitHub Pages: https://rampaulsaini.github.io/Shirmani-Research-Institute/
 - Service: Hindi / English Writing & Research
-- One-time introductory pilot: ₹499 (indicative standard price ₹999), available through 30 November 2026
+- One-time pilot: ₹999, available through 30 November 2026
 - Scope: one deliverable up to 500 words, one consolidated revision
 - Proposed delivery: 2 working days after written scope, required material, and payment confirmation
 
@@ -18,7 +18,7 @@ Convert a real prospective customer into a clearly scoped, paid Hindi/English wr
 
 The page uses direct WhatsApp and email links. It is a static GitHub Pages site: it does not store enquiries in a database, run a backend, or claim that a message was received until the owner sees it.
 
-Payment instructions are shared only after the buyer and SRI agree on the exact scope, price, and deadline in writing. No payment identifier or checkout URL is published here because none is configured in this repository. A payment is verified only after actual account credit is checked; a screenshot alone is not proof of credit.
+Payment instructions are shared only after the buyer and SRI agree on the exact scope, price, and deadline in writing. The existing Razorpay payment route is https://rzp.io/rzp/UhC1i8c and is shared only after written agreement; it is not an unconditional order or payment confirmation. A payment is verified only after actual account credit is checked; a screenshot alone is not proof of credit.
 
 ## Operating boundaries
 
@@ -29,7 +29,9 @@ Payment instructions are shared only after the buyer and SRI agree on the exact 
 - No subscriptions, hidden renewals, pressure tactics, or unlimited free work.
 - Do not claim income until a genuine payment is verified.
 
-## Deployment
+## Validation and deployment
+
+A dependency-free Python smoke test checks the public offer, enquiry brief, scope, price consistency, and safe external links. GitHub Actions runs this check on pull requests and pushes to `main`.
 
 GitHub Pages must be configured by the repository owner to publish the root of `main`. A successful Actions run is deployment evidence, not sales or payment evidence.
 
